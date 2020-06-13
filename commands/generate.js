@@ -47,14 +47,14 @@ uniconsConfig.forEach(icon => {
   const location = path.join(iconsComponentPath, `${baseName}.tsx`)
   const name = upperCamelCase(baseName)
   let svgFile = fs.readFileSync(path.resolve('node_modules/@iconscout/unicons', icon.svg), 'utf-8')
-  
+
   Object.keys(COLOR_CLASS).forEach(key => {
     svgFile = svgFile.replace(new RegExp(key, 'g'), COLOR_CLASS[key])
   })
 
   svgr(svgFile, { typescript: true, svgo: false, svgProps: { width: "{props.size || '1em'}", height: "{props.size || '1em'}", fill: 'currentColor' } }, { componentName: name }).then(template => {
     const updatedTemplate = template
-    .replace(`import * as React from "react";`, `import * as React from "react";\nimport { UimIconProps } from '../index.types'`)
+    .replace(`import * as React from "react";`, `import * as React from "react";\nimport { UimIconProps } from "../index.types"\nimport "../utils/style.css";`)
     .replace(`props: React.SVGProps<SVGSVGElement>`, 'props: UimIconProps');
 
     fs.writeFileSync(location, updatedTemplate, 'utf-8')
